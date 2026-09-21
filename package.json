@@ -1,0 +1,12 @@
+{
+  "name": "interview-handbook",
+  "version": "1.0.0",
+  "private": true,
+  "description": "AI 应用开发面试作战手册（静态站 + 静态加密部署）",
+  "scripts": {
+    "build:encrypted": "node scripts/build-encrypted.js"
+  },
+  "devDependencies": {
+    "staticrypt": "^2.3.1"
+  }
+}

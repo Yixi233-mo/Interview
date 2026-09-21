@@ -1,58 +1,52 @@
 # 面试作战手册
 
-纯静态站点：`index.html` + `css/` + `js/` + `assets/`，无构建步骤。
+本地可编辑的静态手册；**线上 Pages 只发布加密页**（Staticrypt AES-256）。
 
-**在线地址（开启 Pages 后生效）**  
+**在线地址（开启 Pages 且 Source=main/docs 后生效）**  
 https://yixi233-mo.github.io/Interview/
 
 仓库：https://github.com/Yixi233-mo/Interview
 
-## 本地打开
-直接双击 `index.html`，或：
+## 本地开发（未加密，勿直接当公开页）
+
+双击根目录 `index.html`，或：
 
 ```bash
 python -m http.server 8000
 ```
 
-## 怎么用
-1. 先过「口径速查」，把数字背熟
-2. 再过「盲区清单」，知道哪些能主动承认
-3. 逐题看，勾选已复习
-4. 用「自测模式」随机抽题，练口述
-5. 面试前过一遍「翻车急救」
+改题目：`js/data.js`；样式：`css/styles.css`；逻辑：`js/app.js`。
 
-## 怎么改
-- 改题目/答案：编辑 `js/data.js`
-- 改样式：编辑 `css/styles.css`
-- 改逻辑：编辑 `js/app.js`
+## 加密后发布到 GitHub Pages
 
-改完提交推送即可更新站点：
+> 原方案只加密 `index.html` 不够：`js/data.js` 仍是明文。  
+> 正确流程：**内联打包 → staticrypt → 只发布 `docs/index.html`**。
 
-```bash
+```powershell
+cd "E:\work\Mimo\手册"
+# 换成你自己的密码（至少 8 位，不要写进仓库）
+$env:HB_PASSWORD = "你的密码"
+node scripts/build-encrypted.js
 git add -A
-git commit -m "update handbook"
+git commit -m "deploy encrypted handbook"
 git push
 ```
 
-## GitHub Pages 部署
+GitHub 设置：  
+https://github.com/Yixi233-mo/Interview/settings/pages  
+Source 选 **Deploy from a branch** → Branch `main` → 目录 **`/docs`** → Save。
 
-代码已推送到 `main`。在仓库页开启 Pages（二选一）：
+（若用 Actions：workflow 已改为上传 `docs` 目录。）
 
-**方式 A（推荐，配合仓库里的 Actions）**  
-1. 打开 https://github.com/Yixi233-mo/Interview/settings/pages  
-2. Source 选择 **GitHub Actions**  
-3. 等 Actions 跑完，访问上面的在线地址
+## 重要：仓库里不要留明文题库
 
-**方式 B（经典分支部署）**  
-1. 同上设置页  
-2. Source 选择 **Deploy from a branch**  
-3. Branch 选 `main`，目录选 `/ (root)`，Save  
+- `docs/index.html`：加密后的密码页（可公开）
+- 根目录 `js/`、`css/`、未加密 `index.html`：**仅本地编辑**
+- 公开仓库若仍包含 `js/data.js`，等于没加密
 
-> 仓库需为 **Public**，Pages（免费）才会生效。内容已脱敏；若改为 Private，免费 Pages 不可用。
+历史提交里若已有明文 `data.js`，需要 **重建仓库** 或 **force-push 清历史** 才能真正抹掉。重建更干净：新建空仓库，只推 `docs/` + `README.md` + `scripts/` + `package.json` + workflow。
 
-## 脱敏说明
-
-手册正文已脱敏，请保持同一套说法：
+## 脱敏口径（手册内）
 
 | 字段 | 手册写法 |
 |------|----------|
@@ -62,9 +56,7 @@ git push
 | 籍贯 | 外省 |
 | 年龄 | 【年龄】 |
 | 医疗项目名 | 医知通 |
-| 薪资 / LegalMate / 团队规模 | 保留 |
-
-真实对照请记在本地私密处，不要写进本仓库。
+| 薪资 / LegalMate | 保留 |
 
 ## 面试前必做
 - [ ] 填完 data.js 里所有【需核实】
@@ -72,3 +64,4 @@ git push
 - [ ] 确认空窗期口径（hr-04）
 - [ ] 确认 17.8 万条数据来源（med-05）
 - [ ] 确认薪资口径（hr-05）
+- [ ] 改完重新跑 `build-encrypted.js` 并 push

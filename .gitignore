@@ -1,7 +1,12 @@
-# 本地勾选/偏好不上传
+# 依赖与构建产物
+node_modules/
+.build/
+encrypted/
+.staticrypt.json
+
+# 系统
 .DS_Store
 Thumbs.db
 *.log
 .vscode/
 .idea/
-node_modules/

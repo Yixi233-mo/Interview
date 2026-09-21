@@ -1,4 +1,4 @@
-# Deploy static handbook to GitHub Pages
+# Deploy encrypted static site to GitHub Pages
 name: Deploy to GitHub Pages
 
 on:
@@ -26,6 +26,6 @@ jobs:
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: docs
       - id: deployment
         uses: actions/deploy-pages@v4
