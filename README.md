@@ -2,6 +2,11 @@
 
 纯静态站点：`index.html` + `css/` + `js/` + `assets/`，无构建步骤。
 
+**在线地址（开启 Pages 后生效）**  
+https://yixi233-mo.github.io/Interview/
+
+仓库：https://github.com/Yixi233-mo/Interview
+
 ## 本地打开
 直接双击 `index.html`，或：
 
@@ -21,39 +26,29 @@ python -m http.server 8000
 - 改样式：编辑 `css/styles.css`
 - 改逻辑：编辑 `js/app.js`
 
-## 部署与隐私（重要）
+改完提交推送即可更新站点：
 
-本手册含个人口径与求职材料，**不要**放在公开仓库或公开 Pages 上。
+```bash
+git add -A
+git commit -m "update handbook"
+git push
+```
 
-| 方案 | 源码私密 | 页面仅自己可见 | 说明 |
-|------|----------|----------------|------|
-| 本地打开 | — | 是 | 最简单，双击 `index.html` |
-| GitHub 私有仓库（不部署） | 是 | 是 | 需要时 clone / 打开本地 |
-| GitHub Pages（公开仓库） | 否 | 否 | 任何人都能访问，**不建议** |
-| GitHub Pages（私有仓库，需 Pro） | 是 | **否** | 私有仓可开 Pages，但站点 URL 仍是公开的 |
-| Cloudflare Pages + Access | 是 | **是（推荐）** | 部署静态站，用邮箱登录门禁，只有授权账号能打开 |
+## GitHub Pages 部署
 
-### 推荐：Cloudflare Pages + Zero Trust（免费额度够用）
+代码已推送到 `main`。在仓库页开启 Pages（二选一）：
 
-1. 把本目录推到 **GitHub 私有仓库**
-2. Cloudflare Dashboard → Pages → 连接该仓库
-3. 构建命令留空，输出目录填项目根目录（或 `.`）
-4. Zero Trust → Access → 创建 Application：
-   - 类型选 Self-hosted
-   - 域名填 Pages 给的 `xxx.pages.dev`
-   - Policy：Include → Emails → 填你自己的邮箱
-5. 访问时会先要求邮箱验证码，通过后才能看手册
+**方式 A（推荐，配合仓库里的 Actions）**  
+1. 打开 https://github.com/Yixi233-mo/Interview/settings/pages  
+2. Source 选择 **GitHub Actions**  
+3. 等 Actions 跑完，访问上面的在线地址
 
-### 若只想备份代码
+**方式 B（经典分支部署）**  
+1. 同上设置页  
+2. Source 选择 **Deploy from a branch**  
+3. Branch 选 `main`，目录选 `/ (root)`，Save  
 
-GitHub 私有仓库即可，不必开 Pages；平时继续本地双击打开。
-
-## 面试前必做
-- [ ] 填完 data.js 里所有【需核实】
-- [ ] 填完 data.js 里所有【如实说】
-- [ ] 确认空窗期口径（hr-04）
-- [ ] 确认 17.8 万条数据来源（med-05）
-- [ ] 确认薪资口径（hr-05）
+> 仓库需为 **Public**，Pages（免费）才会生效。内容已脱敏；若改为 Private，免费 Pages 不可用。
 
 ## 脱敏说明
 
@@ -70,3 +65,10 @@ GitHub 私有仓库即可，不必开 Pages；平时继续本地双击打开。
 | 薪资 / LegalMate / 团队规模 | 保留 |
 
 真实对照请记在本地私密处，不要写进本仓库。
+
+## 面试前必做
+- [ ] 填完 data.js 里所有【需核实】
+- [ ] 填完 data.js 里所有【如实说】
+- [ ] 确认空窗期口径（hr-04）
+- [ ] 确认 17.8 万条数据来源（med-05）
+- [ ] 确认薪资口径（hr-05）
