@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>AI 应用开发 · 面试作战手册</title>
+  <meta name="description" content="Agent / RAG 大模型应用求职面试作战手册：HR 面、项目深挖、技术面、口径定稿与清单。覆盖 51 个高频问题、3 层追问链、翻车急救。" />
+  <meta name="keywords" content="AI应用开发,Agent,RAG,LangGraph,大模型,面试,求职,LLM" />
+  <meta name="theme-color" content="#0f1520" />
+  <meta name="color-scheme" content="light dark" />
+  <meta property="og:title" content="AI 应用开发 · 面试作战手册" />
+  <meta property="og:description" content="Agent / RAG 面试作战手册：51 个高频问题 + 3 层追问 + 口径定稿。" />
+  <meta property="og:type" content="website" />
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <a href="#main-root" class="skip-link">跳到主内容</a>
+
+  <button type="button" class="btn mobile-toggle" id="btn-menu"
+          aria-label="打开目录" aria-expanded="false" aria-controls="sidebar">目录</button>
+
+  <div class="app">
+    <aside class="sidebar" id="sidebar" aria-label="侧边栏">
+      <div class="brand">
+        <div class="brand-kicker">
+          <span class="brand-badge">BRIEF</span>
+        </div>
+        <h1>面试作战手册</h1>
+        <p>Agent / RAG · 口径定稿优先</p>
+      </div>
+
+      <div class="progress-wrap" id="progress-wrap">
+        <div class="progress-label">
+          <span>复习进度</span>
+          <span id="progress-text">0 / 0</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+      </div>
+
+      <div class="search-wrap">
+        <input id="search" type="search" placeholder="搜索问题、关键词…" autocomplete="off" aria-label="搜索" />
+        <div class="tags-bar">
+          <button type="button" class="tags-toggle" id="btn-tags-toggle"
+                  aria-expanded="false" aria-controls="search-tags">
+            <span class="tags-toggle-label">标签筛选</span>
+            <span class="tags-toggle-count" id="tags-toggle-count"></span>
+            <span class="tags-toggle-icon" aria-hidden="true"></span>
+          </button>
+        </div>
+        <div class="tags-active" id="tags-active" hidden></div>
+        <div class="search-tags is-collapsed" id="search-tags" role="group" aria-label="标签筛选" hidden></div>
+      </div>
+
+      <div class="toolbar toolbar-static">
+        <button type="button" class="btn" id="btn-expand">展开全部</button>
+        <button type="button" class="btn" id="btn-collapse">收起全部</button>
+        <button type="button" class="btn" id="btn-print">打印</button>
+        <button type="button" class="btn" id="btn-clear-checks">清空勾选</button>
+      </div>
+
+      <nav id="nav-root" aria-label="手册目录"></nav>
+    </aside>
+
+    <main class="main" id="main-root">
+      <div class="quick-bar" id="quick-bar">
+        <button type="button" class="btn btn-quick" data-modal="modal-numbers">口径速查</button>
+        <button type="button" class="btn btn-quick" data-modal="modal-rescue">翻车急救</button>
+        <button type="button" class="btn btn-quick" data-modal="modal-blind">盲区清单</button>
+        <button type="button" class="btn btn-quick" data-modal="modal-todo">需核实</button>
+        <button type="button" class="btn btn-quick" id="btn-quiz">自测模式</button>
+        <span class="quick-spacer"></span>
+        <span class="quick-stat" id="quick-stat">共 0 问 · 已复习 0</span>
+      </div>
+
+      <div class="toolbar" id="toolbar"></div>
+      <div class="filter-empty" id="filter-empty" hidden>没有匹配的问题。试试其它关键词，或清空标签筛选。</div>
+
+      <noscript>
+        <div class="note">请启用 JavaScript 以浏览交互版手册。完整内容见同目录 <code>面试作战手册.md</code>。</div>
+      </noscript>
+    </main>
+  </div>
+
+  <div class="modal" id="modal-numbers" role="dialog" aria-modal="true" aria-labelledby="modal-numbers-title" hidden>
+    <div class="modal-backdrop" data-close></div>
+    <div class="modal-panel">
+      <div class="modal-head">
+        <h2 id="modal-numbers-title">口径速查</h2>
+        <button type="button" class="btn btn-close" data-close aria-label="关闭">×</button>
+      </div>
+      <div class="modal-body" id="modal-numbers-body"></div>
+    </div>
+  </div>
+
+  <div class="modal" id="modal-rescue" role="dialog" aria-modal="true" aria-labelledby="modal-rescue-title" hidden>
+    <div class="modal-backdrop" data-close></div>
+    <div class="modal-panel">
+      <div class="modal-head">
+        <h2 id="modal-rescue-title">翻车急救</h2>
+        <button type="button" class="btn btn-close" data-close aria-label="关闭">×</button>
+      </div>
+      <div class="modal-body" id="modal-rescue-body"></div>
+    </div>
+  </div>
+
+  <div class="modal" id="modal-blind" role="dialog" aria-modal="true" aria-labelledby="modal-blind-title" hidden>
+    <div class="modal-backdrop" data-close></div>
+    <div class="modal-panel">
+      <div class="modal-head">
+        <h2 id="modal-blind-title">盲区清单</h2>
+        <button type="button" class="btn btn-close" data-close aria-label="关闭">×</button>
+      </div>
+      <div class="modal-body" id="modal-blind-body"></div>
+    </div>
+  </div>
+
+  <div class="modal" id="modal-todo" role="dialog" aria-modal="true" aria-labelledby="modal-todo-title" hidden>
+    <div class="modal-backdrop" data-close></div>
+    <div class="modal-panel">
+      <div class="modal-head">
+        <h2 id="modal-todo-title">需核实项</h2>
+        <button type="button" class="btn btn-close" data-close aria-label="关闭">×</button>
+      </div>
+      <div class="modal-body" id="modal-todo-body"></div>
+    </div>
+  </div>
+
+  <div class="quiz" id="quiz-overlay" role="dialog" aria-modal="true" aria-labelledby="quiz-title" hidden>
+    <div class="quiz-panel">
+      <div class="quiz-head">
+        <h2 id="quiz-title">自测模式</h2>
+        <button type="button" class="btn btn-close" id="btn-quiz-close" aria-label="关闭">×</button>
+      </div>
+      <div class="quiz-body" id="quiz-body"></div>
+      <div class="quiz-foot" id="quiz-foot"></div>
+    </div>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

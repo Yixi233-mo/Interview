@@ -1,0 +1,7 @@
+# 本地勾选/偏好不上传
+.DS_Store
+Thumbs.db
+*.log
+.vscode/
+.idea/
+node_modules/
