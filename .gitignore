@@ -4,6 +4,13 @@ node_modules/
 encrypted/
 .staticrypt.json
 
+# 公开仓库不跟踪明文源（仅本地编辑）
+js/
+css/
+assets/
+index.html
+scripts/_debug_html.js
+
 # 系统
 .DS_Store
 Thumbs.db
