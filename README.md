@@ -1,67 +1,99 @@
-# 面试作战手册
+# 手册
 
-本地可编辑的静态手册；**线上 Pages 只发布加密页**（Staticrypt AES-256）。
+纯静态工具站：可搜索题库、标签筛选、复习进度、自测模式。零后端、零运行时依赖；发布链用 Staticrypt 做客户端 AES 加密。
 
-**在线地址（开启 Pages 且 Source=main/docs 后生效）**  
-https://yixi233-mo.github.io/Interview/
+- 在线地址（Pages 开启且 Source=`main` → `/docs` 后生效）：https://yixi233-mo.github.io/Interview/
+- 仓库：https://github.com/Yixi233-mo/Interview
 
-仓库：https://github.com/Yixi233-mo/Interview
+## 技术栈
 
-## 本地开发（未加密，勿直接当公开页）
+| 层 | 说明 |
+|----|------|
+| 页面 | HTML5 + CSS3（设计令牌、深色模式、打印样式） |
+| 逻辑 | 原生 JavaScript（ES2020），无框架 |
+| 持久化 | `localStorage`（勾选进度、标签展开等） |
+| 加密发布 | [Staticrypt](https://github.com/robinmoisson/staticrypt)（AES-256，浏览器端解密） |
+| 构建 | Node.js ≥ 16 + `scripts/build-encrypted.js` |
+| 托管 | GitHub Pages（只发布 `docs/`） |
 
-双击根目录 `index.html`，或：
+## 目录结构
+
+```
+├── index.html                 # 开发入口（本地直接打开）
+├── css/styles.css             # 样式
+├── js/
+│   ├── data.js                # 题库数据（本地编辑，不进公开发布树）
+│   ├── storage.js             # localStorage 封装
+│   └── app.js                 # 渲染 / 搜索 / 弹窗 / 自测
+├── scripts/build-encrypted.js # 内联打包 + Staticrypt 加密
+├── docs/index.html            # 加密后的发布页（Pages 只发这个）
+├── .github/workflows/pages.yml
+├── package.json               # devDependency: staticrypt
+└── README.md
+```
+
+## 功能
+
+- 章节导航、折叠展开、全文搜索（高亮命中）
+- 标签筛选（可收起；已选标签摘要）
+- 复习勾选与进度百分比
+- 口径速查 / 翻车急救 / 盲区 / 需核实 弹窗
+- 自测模式（随机抽题、显示答案、会了/不会）
+- 移动端抽屉目录、系统打印
+
+## 本地使用与开发
+
+双击根目录 `index.html`，或起静态服务：
 
 ```bash
 python -m http.server 8000
 ```
 
-改题目：`js/data.js`；样式：`css/styles.css`；逻辑：`js/app.js`。
+| 改什么 | 文件 |
+|--------|------|
+| 题目 / 答案 | `js/data.js` |
+| 样式 | `css/styles.css` |
+| 交互逻辑 | `js/app.js` |
+| 持久化 | `js/storage.js` |
 
-## 加密后发布到 GitHub Pages
+## 加密构建与发布
 
-> 原方案只加密 `index.html` 不够：`js/data.js` 仍是明文。  
-> 正确流程：**内联打包 → staticrypt → 只发布 `docs/index.html`**。
+发布页必须是「内联单文件 → 加密」的结果，避免 `js/data.js` 等以明文出现在可公开访问的路径。
 
 ```powershell
-cd "E:\work\Mimo\手册"
-# 换成你自己的密码（至少 8 位，不要写进仓库）
-$env:HB_PASSWORD = "你的密码"
+npm install
+$env:HB_PASSWORD = "你的密码"   # 至少 8 位，不要写进仓库
 node scripts/build-encrypted.js
 git add -A
 git commit -m "deploy encrypted handbook"
 git push
 ```
 
-GitHub 设置：  
-https://github.com/Yixi233-mo/Interview/settings/pages  
-Source 选 **Deploy from a branch** → Branch `main` → 目录 **`/docs`** → Save。
+脚本流程：
 
-（若用 Actions：workflow 已改为上传 `docs` 目录。）
+1. 将 `css/styles.css` 与 `js/*.js` 内联进单文件 HTML（`.build/index.html`）
+2. 用 Staticrypt 加密，输出 `docs/index.html`
+3. 做明文特征串检查（确保密文页无题库明文）
 
-## 重要：仓库里不要留明文题库
+### GitHub Pages 配置
 
-- `docs/index.html`：加密后的密码页（可公开）
-- 根目录 `js/`、`css/`、未加密 `index.html`：**仅本地编辑**
-- 公开仓库若仍包含 `js/data.js`，等于没加密
+https://github.com/Yixi233-mo/Interview/settings/pages
 
-历史提交里若已有明文 `data.js`，需要 **重建仓库** 或 **force-push 清历史** 才能真正抹掉。重建更干净：新建空仓库，只推 `docs/` + `README.md` + `scripts/` + `package.json` + workflow。
+- Source：**Deploy from a branch**
+- Branch：`main`，目录：**`/docs`**
 
-## 脱敏口径（手册内）
+也可用仓库内 Actions workflow（上传 `docs` 目录）。
 
-| 字段 | 手册写法 |
-|------|----------|
-| 专业 | 【其他专业】 |
-| 工作城市 | 合肥 |
-| 亲属城市 | 南京 |
-| 籍贯 | 外省 |
-| 年龄 | 【年龄】 |
-| 医疗项目名 | 医知通 |
-| 薪资 / LegalMate | 保留 |
+### 环境变量
 
-## 面试前必做
-- [ ] 填完 data.js 里所有【需核实】
-- [ ] 填完 data.js 里所有【如实说】
-- [ ] 确认空窗期口径（hr-04）
-- [ ] 确认 17.8 万条数据来源（med-05）
-- [ ] 确认薪资口径（hr-05）
-- [ ] 改完重新跑 `build-encrypted.js` 并 push
+| 变量 | 作用 |
+|------|------|
+| `HB_PASSWORD` | 加密密码（构建期；亦可用 `STATICRYPT_PASSWORD`） |
+
+密码只用于本地构建，不进仓库、不写入前端源码。
+
+## 构建注意
+
+- 内联 JS 时使用函数形式的 `String.replace`（源码里可能含 `$&`、`$$` 等特殊替换序列）。
+- 公开树中应只保留 `docs/index.html` 等可发布文件；若仓库内仍含明文 `js/data.js`，加密等于无效。
+- 本地开发用的 `index.html`、`css/`、`js/` 仅供编辑，不作为公开 Pages 入口。
