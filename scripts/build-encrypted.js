@@ -65,7 +65,7 @@ const args = [
   '-d', outDir,
   '--short',
   '--remember', '30',
-  '--template-title', 'AI 应用开发 · 面试作战手册',
+  '--template-title', '作战手册',
   '--template-placeholder', '输入访问密码',
   '--template-button', '解锁',
   '--template-instructions', '本手册已加密，请输入密码后查看。',
