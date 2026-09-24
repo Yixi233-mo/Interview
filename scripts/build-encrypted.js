@@ -61,7 +61,8 @@ const staticryptCmd = path.join(root, 'node_modules', '.bin', 'staticrypt.cmd');
 
 const args = [
   bundleFile,
-  '-p', password,
+  // staticrypt v3 用位置参数取密码（不是 -p）；同时注入 STATICRYPT_PASSWORD 兜底
+  password,
   '-d', outDir,
   '--short',
   '--remember', '30',
@@ -71,15 +72,17 @@ const args = [
   '--template-instructions', '本手册已加密，请输入密码后查看。',
   '--template-error', '密码错误'
 ];
+const childEnv = { ...process.env, STATICRYPT_PASSWORD: password, HB_PASSWORD: password };
 
 if (fs.existsSync(staticryptJs)) {
-  execFileSync(process.execPath, [staticryptJs, ...args], { stdio: 'inherit', cwd: root });
+  execFileSync(process.execPath, [staticryptJs, ...args], { stdio: 'inherit', cwd: root, env: childEnv });
 } else if (fs.existsSync(staticryptCmd)) {
-  execFileSync(staticryptCmd, args, { stdio: 'inherit', cwd: root });
+  execFileSync(staticryptCmd, args, { stdio: 'inherit', cwd: root, env: childEnv });
 } else {
   execFileSync('npx', ['--yes', 'staticrypt', ...args], {
     stdio: 'inherit',
     cwd: root,
+    env: childEnv,
     shell: true
   });
 }
